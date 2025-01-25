@@ -1,0 +1,10 @@
+test.db
+__pycache__
+.venv
+
+
+
+.vscode
+.idea
+
+*.example
