@@ -1,4 +1,5 @@
 from fastapi import FastAPI, Depends
+from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import create_tables
 from app.api import static_ip, lease
@@ -27,6 +28,14 @@ View leases and assign static IPs.
     """,
     version="0.1",
     openapi_tags=openapi_tags
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
 )
 create_tables()
 
