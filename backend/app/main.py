@@ -1,11 +1,16 @@
-from fastapi import FastAPI, Depends
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.db import create_tables
-from app.api import static_ip, lease
+from app.api import static_ip, lease, interfaces
+import os
 
-import dotenv
-dotenv.load_dotenv()
+if os.getenv('EPS_PROD') != 1:
+    print("Loading .env file")
+    import dotenv
+    dotenv.load_dotenv()
+else:
+    print("Skipping .env file")
 
 openapi_tags = [
     {
@@ -39,7 +44,11 @@ app.add_middleware(
 )
 create_tables()
 
+router = APIRouter()
 
-app.include_router(static_ip.router, prefix="/static_ip", tags=["Static IPs"])
-app.include_router(lease.router, prefix="/lease", tags=["Leases"])
+#
+#router.include_router(static_ip.router, prefix="/static_ip", tags=["Static IPs"])
+router.include_router(lease.router, prefix="/lease", tags=["Leases"])
+router.include_router(interfaces.router, prefix="/interface", tags=["Interfaces"])
 
+app.include_router(router, prefix="/api")

@@ -1,0 +1,19 @@
+
+services:
+  frontend:
+    build: ./frontend/
+    network_mode: "host"
+  backend:
+    build: ./backend
+    network_mode: "host"
+    environment:
+      EPS_PROD: '1'
+      EPS_STATIC_LEASES_PATH: '/etc/dnsmasq.static.conf'
+      EPS_LEASES_PATH: '/var/lib/dhcp/dhcpd.leases'
+      EPS_STATIC_NETWORK: '10.5.3.0/24'
+    volumes:
+    #- '/etc/dnsmasq.static.conf:/etc/dnsmasq.static.conf'
+    #- '/var/lib/dhcp/dhcpd.leases:/var/lib/dhcp/dhcpd.leases'  
+    - './backend/static.example:/etc/dnsmasq.static.conf'
+    - './backend/leases.example:/var/lib/dhcp/dhcpd.leases'  
+
